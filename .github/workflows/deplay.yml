@@ -1,4 +1,4 @@
-name: Test Application
+name: Deply Application
 
 on:
   workflow_run:
