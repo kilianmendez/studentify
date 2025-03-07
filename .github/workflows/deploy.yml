@@ -10,6 +10,7 @@ on:
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     runs-on: ubuntu-22.04
     permissions:
@@ -25,8 +26,11 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ secrets.AWS_REGION }}
         role-skip-session-tagging: true
-    - name: Deploy Application
-      run:
-        aws deploy create-deployment --application-name Studentify /
-          --deployment-group-name Backends /
-          --github-location repository=${{github.GITHUB_REPOSITORY}},commitId=${{github.GITHUB_SHA}} /
+    - name: Deploy Application to AWS
+      run: |
+        aws deploy create-deployment \
+          --region us-east-1 \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --application-name DeployDespliegue \
+          --deployment-group-name GRUPO_MIO \
+          --github-location "repository=${{ github.repository }},commitId=${{ github.sha }}" \
